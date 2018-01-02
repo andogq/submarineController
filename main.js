@@ -54,6 +54,29 @@ function mainLoop() {
         console.log("Button pad bottom right pressed");
     }
 
+    // Check the axes
+    if (joystick.axes[0] != 0) {
+        console.log("Main left right axis: " + joystick.axes[0]);
+    }
+
+    if (joystick.axes[1] != 0) {
+        console.log("Main up down axis: " + joystick.axes[1]);
+    }
+
+    if (joystick.axes[2] != 0) {
+        console.log("Main twist axis: " + joystick.axes[2]);
+    }
+
+    // Not the 3rd axis because it has been removed from the joystick
+
+    if (joystick.axes[4] != 0) {
+        console.log("Mini left right axis: " + joystick.axes[4]);
+    }
+
+    if (joystick.axes[5] != 0) {
+        console.log("Mini up down axis: " + joystick.axes[5]);
+    }
+
     requestAnimationFrame(mainLoop);
 }
 
