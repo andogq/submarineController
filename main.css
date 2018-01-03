@@ -1,0 +1,60 @@
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+}
+
+* {
+    padding: 0;
+    margin: 0;
+
+    /* Won't need a cursor, only a joystick */
+    cursor: none;
+}
+
+button {
+    /* Sizing */
+    padding: 2%;
+
+    /* Positioning */
+    display: block;
+
+    /* Text */
+    color: black;
+    font-size: 2em;
+
+    /* Background & borders */
+    background: white;
+    border: 3px solid black;
+}
+
+#interface {
+    /* Sizing */
+    height: 100%;
+    width: 100%;
+
+    /* Positioning */
+    position: fixed;
+    top: 0;
+    left: 0;
+
+    /* Other */
+    display: table;                             /* Vertically align main menu */
+}
+
+#mainMenu {
+    /* Other */
+    display: table-cell;                        /* Vertically align main menu */
+    vertical-align: middle;                     /* Vertically align main menu */
+}
+
+#mainMenu > * {
+    width: 50%;                                 /* Vertically align main menu */
+    margin: 2.5% auto;                          /* Vertically align main menu */
+}
+
+#mainMenuHeading {
+    /* Text */
+    font-family: sans-serif;
+    text-align: center;
+}

@@ -86,5 +86,7 @@ window.addEventListener("gamepadconnected", function(e) {
     joystickIndex = e.gamepad.index;
 
     // Start the main loop
-    requestAnimationFrame(mainLoop);
+    //requestAnimationFrame(mainLoop);
 });
+
+mainMenu();
