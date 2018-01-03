@@ -58,3 +58,8 @@ button {
     font-family: sans-serif;
     text-align: center;
 }
+
+.buttonSelected {
+    border: 6px solid red;
+    font-weight: bold;
+}
