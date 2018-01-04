@@ -1,6 +1,9 @@
 // Global variable for the parent div
 let domInterface = document.getElementById("interface");
 
+// Current item for the main menu (index 1, 0th item is heading)
+let mainMenuItem = 1;
+
 // Makes and returns a button
 function makeButton(id, classList, innerHTML) {
     // New button
@@ -26,13 +29,22 @@ function makeButton(id, classList, innerHTML) {
 
 // Catches the joystick moving on the main menu
 function mainMenuNavigate(joystick) {
-    // Going up
-    if (joystick.axes[5] > 0) {
-        console.log("Down");
-    } else if (joystick.axes[5] < 0) {
-        console.log("Up");
-    } else {
-        console.log("pass");
+    if (buttonHeld("axesMiniUpDown")) {
+        let domMainMenuChildren = document.getElementById("mainMenu").children;
+        let mainMenuLength = domMainMenuChildren.length - 1;
+        if (joystick.axes[5] > 0) {
+            // Move menu selection down one
+            domMainMenuChildren[mainMenuItem].classList.remove("buttonSelected");
+            // Make sure it doesn't go past the last element
+            mainMenuItem = mainMenuItem < mainMenuLength ? mainMenuItem + 1 : mainMenuLength;
+            domMainMenuChildren[mainMenuItem].classList.add("buttonSelected");
+        } else if (joystick.axes[5] < 0) {
+            // Move menu selection up one
+            domMainMenuChildren[mainMenuItem].classList.remove("buttonSelected");
+            // Make sure it doesn't go past the last element
+            mainMenuItem = mainMenuItem > 1 ? mainMenuItem - 1 : 1;
+            domMainMenuChildren[mainMenuItem].classList.add("buttonSelected");
+        }
     }
 }
 
