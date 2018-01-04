@@ -27,11 +27,35 @@ function makeButton(id, classList, innerHTML) {
     return newButton;
 }
 
+// Makes and returns a heading
+function makeHeading(size, id, classList, innerHTML) {
+    // New button
+    let newHeading = document.createElement("h" + size);
+
+    // Do the attributes
+    if (id) {
+        newHeading.id = id;
+    }
+
+    if (innerHTML) {
+        newHeading.innerHTML = innerHTML;
+    }
+
+    if (classList) {
+        for (newClass of classList) {
+            newHeading.classList.add(newClass);
+        }
+    }
+
+    return newHeading;
+}
+
 // Catches the joystick moving on the main menu
 function mainMenuNavigate(joystick) {
-    if (buttonHeld("axesMiniUpDown")) {
+    if (buttonHeld("axesMiniUpDown")) { // Prevent spamming
         let domMainMenuChildren = document.getElementById("mainMenu").children;
         let mainMenuLength = domMainMenuChildren.length - 1;
+
         if (joystick.axes[5] > 0) {
             // Move menu selection down one
             domMainMenuChildren[mainMenuItem].classList.remove("buttonSelected");
@@ -59,20 +83,18 @@ function mainMenu() {
     domMainMenu.id = "mainMenu"
 
     // Heading
-    let domMainMenuHeading = document.createElement("h1");
-    domMainMenuHeading.innerHTML = "Main Menu";
-    domMainMenuHeading.id = "mainMenuHeading";
+    let domMainMenuHeading = makeHeading(1, "mainMenuHeading", undefined, "Main Menu");
     domMainMenu.appendChild(domMainMenuHeading);
 
     // Make 3 buttons
-    let newButton = makeButton(undefined, ["buttonSelected"], "Button #1");
-    domMainMenu.appendChild(newButton);
+    let connectButton = makeButton(undefined, ["buttonSelected"], "Connect");
+    domMainMenu.appendChild(connectButton);
 
-    let newButton2 = makeButton(undefined, undefined, "Button #2");
-    domMainMenu.appendChild(newButton2);
+    let optionsButton = makeButton(undefined, undefined, "Options");
+    domMainMenu.appendChild(optionsButton);
 
-    let newButton3 = makeButton(undefined, undefined, "Button #3");
-    domMainMenu.appendChild(newButton3);
+    let exitButton = makeButton(undefined, undefined, "Exit");
+    domMainMenu.appendChild(exitButton);
 
     domInterface.appendChild(domMainMenu);
 
