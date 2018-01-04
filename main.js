@@ -41,7 +41,7 @@ let lastTimePressed = {
 }
 
 // Prevents the button (mini axes included) from spamming by being held down
-function buttonHeld(button) {
+function buttonNotHeld(button) {
     // If they are 500 milliseconds apart
     if ((Date.now() - lastTimePressed[button]) > 500) {
         // Change to the new time

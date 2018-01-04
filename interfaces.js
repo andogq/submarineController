@@ -3,6 +3,23 @@ let domInterface = document.getElementById("interface");
 
 // Current item for the main menu (index 1, 0th item is heading)
 let mainMenuItem = 1;
+// Main menu functions. Undefined to keep it lined up with the children of the main menu
+let mainMenuFunctions = [undefined,
+    connectSub,
+    options,
+    exit
+]
+
+// Dummy functions
+function connectSub() {
+    console.log("Connecting");
+}
+function options() {
+    console.log("Options");
+}
+function exit() {
+    console.log("Exiting");
+}
 
 // Makes and returns a button
 function makeButton(id, classList, innerHTML) {
@@ -52,7 +69,7 @@ function makeHeading(size, id, classList, innerHTML) {
 
 // Catches the joystick moving on the main menu
 function mainMenuNavigate(joystick) {
-    if (buttonHeld("axesMiniUpDown")) { // Prevent spamming
+    if (buttonNotHeld("axesMiniUpDown")) { // Prevent spamming
         let domMainMenuChildren = document.getElementById("mainMenu").children;
         let mainMenuLength = domMainMenuChildren.length - 1;
 
@@ -72,9 +89,17 @@ function mainMenuNavigate(joystick) {
     }
 }
 
-// Sets the joystick into navigation mode
-function setMainMenuNavigate() {
+// Runs the function attached to the current menu item
+function mainMenuSelect() {
+    if (buttonNotHeld("trigger")) {
+        mainMenuFunctions[mainMenuItem]();
+    }
+}
+
+// Sets the joystick for the main menu
+function setJoystickMainMenu() {
     joystickEvent.axesMiniUpDown = mainMenuNavigate;
+    joystickEvent.trigger = mainMenuSelect;
 }
 
 function mainMenu() {
@@ -98,6 +123,6 @@ function mainMenu() {
 
     domInterface.appendChild(domMainMenu);
 
-    // Set the main joystick axes to navigate them
-    setMainMenuNavigate();
+    // Set the joystick to navigate the menu
+    setJoystickMainMenu();
 }
