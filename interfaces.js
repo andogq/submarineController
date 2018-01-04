@@ -24,6 +24,23 @@ function makeButton(id, classList, innerHTML) {
     return newButton;
 }
 
+// Catches the joystick moving on the main menu
+function mainMenuNavigate(joystick) {
+    // Going up
+    if (joystick.axes[5] > 0) {
+        console.log("Down");
+    } else if (joystick.axes[5] < 0) {
+        console.log("Up");
+    } else {
+        console.log("pass");
+    }
+}
+
+// Sets the joystick into navigation mode
+function setMainMenuNavigate() {
+    joystickEvent.axesMiniUpDown = mainMenuNavigate;
+}
+
 function mainMenu() {
     // Container for the main menu
     let domMainMenu = document.createElement("div");
@@ -35,6 +52,7 @@ function mainMenu() {
     domMainMenuHeading.id = "mainMenuHeading";
     domMainMenu.appendChild(domMainMenuHeading);
 
+    // Make 3 buttons
     let newButton = makeButton(undefined, ["buttonSelected"], "Button #1");
     domMainMenu.appendChild(newButton);
 
@@ -45,4 +63,7 @@ function mainMenu() {
     domMainMenu.appendChild(newButton3);
 
     domInterface.appendChild(domMainMenu);
+
+    // Set the main joystick axes to navigate them
+    setMainMenuNavigate();
 }

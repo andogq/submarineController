@@ -14,7 +14,12 @@ let joystickEvent = {
     "middleLeftPadButton": function() {return;},
     "middleRightPadButton": function() {return;},
     "bottomLeftPadButton": function() {return;},
-    "bottomRightPadButton": function() {return;}
+    "bottomRightPadButton": function() {return;},
+    "axesMainLeftRight": function() {return;},
+    "axesMainUpDown": function() {return;},
+    "axesMainTwist": function() {return;},
+    "axesMiniLeftRight": function() {return;},
+    "axesMiniUpDown": function() {return;}
 };
 
 function mainLoop() {
@@ -84,25 +89,30 @@ function mainLoop() {
 
     // Check the axes
     if (joystick.axes[0] != 0) {
-        console.log("Main left right axis: " + joystick.axes[0]);
+        joystickEvent.axesMainLeftRight(joystick);
+        //console.log("Main left right axes: " + joystick.axes[0]);
     }
 
     if (joystick.axes[1] != 0) {
-        console.log("Main up down axis: " + joystick.axes[1]);
+        joystickEvent.axesMainUpDown(joystick);
+        //console.log("Main up down axes: " + joystick.axes[1]);
     }
 
     if (joystick.axes[2] != 0) {
-        console.log("Main twist axis: " + joystick.axes[2]);
+        joystickEvent.axesMainTwist(joystick);
+        //console.log("Main twist axes: " + joystick.axes[2]);
     }
 
-    // Not the 3rd axis because it has been removed from the joystick
+    // Not the 3rd axes because it has been removed from the joystick
 
     if (joystick.axes[4] != 0) {
-        console.log("Mini left right axis: " + joystick.axes[4]);
+        joystickEvent.axesMiniLeftRight(joystick);
+        //console.log("Mini left right axes: " + joystick.axes[4]);
     }
 
     if (joystick.axes[5] != 0) {
-        console.log("Mini up down axis: " + joystick.axes[5]);
+        joystickEvent.axesMiniUpDown(joystick);
+        // console.log("Mini up down axes: " + joystick.axes[5]);
     }
 
     requestAnimationFrame(mainLoop);
