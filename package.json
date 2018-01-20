@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/tom-ando/submarineController/issues"
   },
-  "homepage": "https://github.com/tom-ando/submarineController#readme"
+  "homepage": "https://github.com/tom-ando/submarineController#readme",
+  "dependencies": {
+    "shelljs": "^0.8.0"
+  }
 }

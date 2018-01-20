@@ -8,6 +8,8 @@ console.log("[+] Importing modules\n");
 
 var http = require("http");
 var fs = require("fs");
+require("shelljs/global");
+
 
 // Open static files
 console.log("[+] Opening static files");
@@ -90,3 +92,11 @@ console.log("[+] Setting up webserver");
 var webserver = http.createServer(incomingRequest);
 console.log("[+] Starting webserver on port " + webserverPort + "\n");
 webserver.listen(webserverPort);
+
+// Check if running on developer machine
+if (fs.existsSync("../.submarineDev")) {
+    console.log("[+] Developer machine; Not launching Chromium")
+} else {
+    console.log("[+] Launching web browser");
+    exec("chromium-browser --app=http://0.0.0.0:" + webserverPort + " --start-fullscreen &", {silent: true});
+}
