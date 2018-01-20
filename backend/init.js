@@ -29,7 +29,7 @@ console.log("\n");
 function incomingRequest(request, response) {
     console.log("    [+] Request received");
 
-    const url = request.url;
+    const url = request.url == "/" ? "/index.html" : request.url;
     console.log("        [+] Url: " + url);
 
     // Send the right file back
@@ -67,13 +67,18 @@ function incomingRequest(request, response) {
 
     // Check the status code
     if (status == 200) {
-        console.log("        [+] Sending response");
+        // Set the content type
+        var contentType = url.match(/\.(.+)/)[1];
+        response.setHeader("Content-Type", "text/" + contentType);
+
+        // Write the response
         response.write(file);
     } else if (status == 404) {
         console.log("        [!] File not found at " + url);
     }
 
     // Send the response
+    console.log("        [+] Sending response");
     response.end();
 }
 
