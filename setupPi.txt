@@ -1,0 +1,63 @@
+Instructions for basic set up, adding a splash screen and disabling boot messages
+
+1. Execute "sudo raspi-config"
+2. Go to "Boot Options"
+3. Go to "Desktop / CLI"
+4. Choose "Desktop Autologin"
+5. Go to "Advanced Options"
+6. Choose "Expand Filesystem"
+7. Select "Finish"
+8. Select "Yes" to reboot Pi
+9. Update packages with "sudo apt-get update && sudo apt-get upgrade"
+10. Clone source code with "git clone https://github.com/tom-ando/submarineController.git"
+10. Install fbi with "sudo apt-get install fbi"
+11. Copy the spash screen image with "cp submarineController/media/waterPiSplash.png /etc/splash.png"
+12. Open a new file with "sudo nano /etc/init.d/asplashscreen"
+13. Copy the following in:
+
+#! /bin/sh
+### BEGIN INIT INFO
+# Provides:          asplashscreen
+# Required-Start:
+# Required-Stop:
+# Should-Start:
+# Default-Start:     S
+# Default-Stop:
+# Short-Description: Show custom splashscreen
+# Description:       Show custom splashscreen
+### END INIT INFO
+
+
+do_start () {
+
+    /usr/bin/fbi -T 1 -noverbose -a /etc/splash.png
+    exit 0
+}
+
+case "$1" in
+  start|"")
+    do_start
+    ;;
+  restart|reload|force-reload)
+    echo "Error: argument '$1' not supported" >&2
+    exit 3
+    ;;
+  stop)
+    # No-op
+    ;;
+  status)
+    exit 0
+    ;;
+  *)
+    echo "Usage: asplashscreen [start|stop]" >&2
+    exit 3
+    ;;
+esac
+
+:
+
+14. Make the script executable with "sudo chmod a+x /et/init.d/asplashscreen"
+15. Prepare it for rcS init mode with "insserv /etc/init.d/asplashscreen"
+16. Open cmdline.txt with "sudo nano /boot/cmdline.txt"
+17. Add "loglevel=0" after "console=tty3"
+18. Add "logo.nologo" after "rootwait"
