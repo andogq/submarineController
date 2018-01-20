@@ -117,10 +117,10 @@ function options() {
     domOptionsMenu.appendChild(domMainMenuHeading);
 
     // Make 3 buttons
-    let button1 = makeButton(undefined, ["buttonSelected"], "Button 1");
+    let button1 = makeButton(undefined, ["buttonSelected"], "Connection Details");
     domOptionsMenu.appendChild(button1);
 
-    let button2 = makeButton(undefined, undefined, "Button 2");
+    let button2 = makeButton(undefined, undefined, "Update");
     domOptionsMenu.appendChild(button2);
 
     let backButton = makeButton(undefined, undefined, "Back");
@@ -175,7 +175,7 @@ function mainMenu() {
     domMainMenu.id = "mainMenu"
 
     // Heading
-    let domMainMenuHeading = makeHeading(1, undefined, ["menuHeading"], "Main Menu");
+    let domMainMenuHeading = makeHeading(1, undefined, ["menuHeading"], "WaterPi Controller");
     domMainMenu.appendChild(domMainMenuHeading);
 
     // Make 3 buttons
@@ -185,7 +185,7 @@ function mainMenu() {
     let optionsButton = makeButton(undefined, undefined, "Options");
     domMainMenu.appendChild(optionsButton);
 
-    let exitButton = makeButton(undefined, undefined, "Exit");
+    let exitButton = makeButton(undefined, undefined, "Shutdown");
     domMainMenu.appendChild(exitButton);
 
     domInterface.appendChild(domMainMenu);
