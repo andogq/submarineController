@@ -14,9 +14,7 @@ let mainMenuFunctions = [undefined,
 function connectSub() {
     console.log("Connecting");
 }
-function options() {
-    console.log("Options");
-}
+
 function exit() {
     console.log("Exiting");
 }
@@ -67,6 +65,35 @@ function makeHeading(size, id, classList, innerHTML) {
     return newHeading;
 }
 
+// Called when the options button is pressed
+function options() {
+    // Hide the main menu
+    domInterface.removeChild(domInterface.children[0]);
+
+    // Container for the options menu
+    let domOptionsMenu = document.createElement("div");
+    domOptionsMenu.id = "mainMenu"
+
+    // Heading
+    let domMainMenuHeading = makeHeading(1, undefined, ["menuHeading"], "Options");
+    domOptionsMenu.appendChild(domMainMenuHeading);
+
+    // Make 3 buttons
+    let button1 = makeButton(undefined, ["buttonSelected"], "Button 1");
+    domOptionsMenu.appendChild(button1);
+
+    let button2 = makeButton(undefined, undefined, "Button 2");
+    domOptionsMenu.appendChild(button2);
+
+    let button3 = makeButton(undefined, undefined, "Button 3");
+    domOptionsMenu.appendChild(button3);
+
+    domInterface.appendChild(domOptionsMenu);
+
+    // Set the joystick to navigate the menu
+    setJoystickMainMenu();
+}
+
 // Catches the joystick moving on the main menu
 function mainMenuNavigate(joystick) {
     if (buttonNotHeld("axesMiniUpDown")) { // Prevent spamming
@@ -102,13 +129,14 @@ function setJoystickMainMenu() {
     joystickEvent.trigger = mainMenuSelect;
 }
 
+// Makes the main menu
 function mainMenu() {
     // Container for the main menu
     let domMainMenu = document.createElement("div");
     domMainMenu.id = "mainMenu"
 
     // Heading
-    let domMainMenuHeading = makeHeading(1, "mainMenuHeading", undefined, "Main Menu");
+    let domMainMenuHeading = makeHeading(1, undefined, ["menuHeading"], "Main Menu");
     domMainMenu.appendChild(domMainMenuHeading);
 
     // Make 3 buttons
