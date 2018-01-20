@@ -2,12 +2,20 @@
 let domInterface = document.getElementById("interface");
 
 // Current item for the main menu (index 1, 0th item is heading)
-let mainMenuItem = 1;
+let currentMenuItem = 1;
+
 // Main menu functions. Undefined to keep it lined up with the children of the main menu
 let mainMenuFunctions = [undefined,
     connectSub,
     options,
     exit
+]
+
+// Option menu functions. First item is the title so it's never selected
+let optionsMenuFunctions = [undefined,
+    optionsButton1,
+    optionsButton2,
+    optionsBack
 ]
 
 // Dummy functions
@@ -17,6 +25,14 @@ function connectSub() {
 
 function exit() {
     console.log("Exiting");
+}
+
+function optionsButton1() {
+    console.log("Options button 1");
+}
+
+function optionsButton2() {
+    console.log("Options button 2");
 }
 
 // Makes and returns a button
@@ -65,6 +81,28 @@ function makeHeading(size, id, classList, innerHTML) {
     return newHeading;
 }
 
+// Catches the joystick moving on a menu
+function menuNavigate(joystick) {
+    if (buttonNotHeld("axesMiniUpDown")) { // Prevent spamming
+        let domMenuChildren = document.getElementById("interface").children[0].children;
+        let menuLength = domMenuChildren.length - 1;
+
+        if (joystick.axes[5] > 0) {
+            // Move menu selection down one
+            domMenuChildren[currentMenuItem].classList.remove("buttonSelected");
+            // Make sure it doesn't go past the last element
+            currentMenuItem = currentMenuItem < menuLength ? currentMenuItem + 1 : menuLength;
+            domMenuChildren[currentMenuItem].classList.add("buttonSelected");
+        } else if (joystick.axes[5] < 0) {
+            // Move menu selection up one
+            domMenuChildren[currentMenuItem].classList.remove("buttonSelected");
+            // Make sure it doesn't go past the last element
+            currentMenuItem = currentMenuItem > 1 ? currentMenuItem - 1 : 1;
+            domMenuChildren[currentMenuItem].classList.add("buttonSelected");
+        }
+    }
+}
+
 // Called when the options button is pressed
 function options() {
     // Hide the main menu
@@ -85,47 +123,48 @@ function options() {
     let button2 = makeButton(undefined, undefined, "Button 2");
     domOptionsMenu.appendChild(button2);
 
-    let button3 = makeButton(undefined, undefined, "Button 3");
-    domOptionsMenu.appendChild(button3);
+    let backButton = makeButton(undefined, undefined, "Back");
+    domOptionsMenu.appendChild(backButton);
 
     domInterface.appendChild(domOptionsMenu);
 
     // Set the joystick to navigate the menu
-    setJoystickMainMenu();
+    setJoystickOptionsMenu();
 }
 
-// Catches the joystick moving on the main menu
-function mainMenuNavigate(joystick) {
-    if (buttonNotHeld("axesMiniUpDown")) { // Prevent spamming
-        let domMainMenuChildren = document.getElementById("mainMenu").children;
-        let mainMenuLength = domMainMenuChildren.length - 1;
+function optionsBack() {
+    // Remove the current menu
+    domInterface.removeChild(domInterface.children[0]);
+    mainMenu();
+}
 
-        if (joystick.axes[5] > 0) {
-            // Move menu selection down one
-            domMainMenuChildren[mainMenuItem].classList.remove("buttonSelected");
-            // Make sure it doesn't go past the last element
-            mainMenuItem = mainMenuItem < mainMenuLength ? mainMenuItem + 1 : mainMenuLength;
-            domMainMenuChildren[mainMenuItem].classList.add("buttonSelected");
-        } else if (joystick.axes[5] < 0) {
-            // Move menu selection up one
-            domMainMenuChildren[mainMenuItem].classList.remove("buttonSelected");
-            // Make sure it doesn't go past the last element
-            mainMenuItem = mainMenuItem > 1 ? mainMenuItem - 1 : 1;
-            domMainMenuChildren[mainMenuItem].classList.add("buttonSelected");
-        }
+// Sets the joystick for the options menu
+function setJoystickOptionsMenu() {
+    // Reset the menu position to the first item (not including the heading)
+    currentMenuItem = 1;
+    joystickEvent.axesMiniUpDown = menuNavigate;
+    joystickEvent.trigger = optionsMenuSelect;
+}
+
+// Runs the function attached to the current menu item
+function optionsMenuSelect() {
+    if (buttonNotHeld("trigger")) {
+        optionsMenuFunctions[currentMenuItem]();
     }
 }
 
 // Runs the function attached to the current menu item
 function mainMenuSelect() {
     if (buttonNotHeld("trigger")) {
-        mainMenuFunctions[mainMenuItem]();
+        mainMenuFunctions[currentMenuItem]();
     }
 }
 
 // Sets the joystick for the main menu
 function setJoystickMainMenu() {
-    joystickEvent.axesMiniUpDown = mainMenuNavigate;
+    // Reset the menu position to the first item (not including the heading)
+    currentMenuItem = 1;
+    joystickEvent.axesMiniUpDown = menuNavigate;
     joystickEvent.trigger = mainMenuSelect;
 }
 
