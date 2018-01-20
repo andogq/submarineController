@@ -1,3 +1,6 @@
+// Defaults
+const webserverPort = 8000;
+
 console.log("[+] Starting backend script\n");
 
 // Module imports
@@ -78,12 +81,12 @@ function incomingRequest(request, response) {
     }
 
     // Send the response
-    console.log("        [+] Sending response");
+    console.log("        [+] Sending response\n");
     response.end();
 }
 
 // Set up webserver
 console.log("[+] Setting up webserver");
 var webserver = http.createServer(incomingRequest);
-console.log("[+] Starting webserver\n");
-webserver.listen(8000);
+console.log("[+] Starting webserver on port " + webserverPort + "\n");
+webserver.listen(webserverPort);
