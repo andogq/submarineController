@@ -61,3 +61,17 @@ esac
 16. Open cmdline.txt with "sudo nano /boot/cmdline.txt"
 17. Add "loglevel=0" after "console=tty3"
 18. Add "logo.nologo" after "rootwait"
+19. Open ~/.profile with "nano ~/.profile"
+20. Add the following to the top of the file:
+
+cd /home/pi/submarineController/backend/
+node init.js &
+
+21. Change the desktop background with "pcmanfm --set-wallpaper /home/pi/submarineController/media/waterPiSplash.png". Note: Won't work over ssh
+22. Run "passwd" to change the default password for "pi". Make it something easy to remember (eg. WaterPi)
+23. With a keyboard and a screen, go to the "Menu", then "Preferences" and then "Appearance Settings" and uncheck "Wastebasket"
+24. Go to the bar at the top of the screen and right click on it. Click on "Panel Settings" in the drop down menu
+25. Under the first tab, set the "Width" to 0 and "Height" to 16 to totally hide the bar
+26. Install "unclutter" with "sudo apt-get install unclutter"
+27. Open "/etc/xdg/lxsession/LXDE/autostart" with "sudo nano /etx/xdg/lxsession/LXDE/autostart" and add "@unclutter -idle 0.1 -root" to the bottom
+28. Reboot and everything should load up
