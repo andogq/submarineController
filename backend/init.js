@@ -7,21 +7,21 @@ var http = require("http");
 var fs = require("fs");
 
 // Open static files
-var staticFiles = {};
-
 console.log("[+] Opening static files");
 
-staticFiles["index"] = fs.readFileSync("../frontend/index.html");
-console.log("    [+] index.html opened");
+var staticFiles = {};
+const staticFileNames = ["index.html", "main.css", "main.js", "interfaces.js"];
 
-staticFiles["css"] = fs.readFileSync("../frontend/main.css");
-console.log("    [+] main.css opened");
+// Function to open and save a file
+function openFile(fileName) {
+    staticFiles[fileName] = fs.readFileSync("../frontend/" + fileName);
+    console.log("    [+] " + fileName + " opened");
+}
 
-staticFiles["js"] = fs.readFileSync("../frontend/main.js");
-console.log("    [+] main.js opened");
-
-staticFiles["interfaces"] = fs.readFileSync("../frontend/interfaces.js");
-console.log("    [+] interfaces.js opened");
+// Loop through the list of files and open them
+for (file of staticFileNames) {
+    openFile(file);
+}
 
 console.log("\n");
 
@@ -33,35 +33,48 @@ function incomingRequest(request, response) {
     console.log("        [+] Url: " + url);
 
     // Send the right file back
+    var file = "";
+    var status = 200;
+
     switch (url) {
         case "/":
-            var file = staticFiles["index"];
+            file = staticFiles["index.html"];
             break;
 
         case "/index.html":
-            var file = staticFiles["index"];
+            file = staticFiles["index.html"];
             break;
 
         case "/main.css":
-            var file = staticFiles["css"];
+            file = staticFiles["main.css"];
             break;
 
         case "/main.js":
-            var file = staticFiles["js"];
+            file = staticFiles["main.js"];
             break;
 
         case "/interfaces.js":
-            var file = staticFiles["interfaces"];
+            file = staticFiles["interfaces.js"];
             break;
 
         default:
-            var file = "404";
+            status = 404;
             break;
     }
 
+    // Set the status code of the response
+    response.statusCode = status;
+
+    // Check the status code
+    if (status == 200) {
+        console.log("        [+] Sending response");
+        response.write(file);
+    } else if (status == 404) {
+        console.log("        [!] File not found at " + url);
+    }
+
     // Send the response
-    console.log("        [+] Sending response");
-    response.end(file);
+    response.end();
 }
 
 // Set up webserver
