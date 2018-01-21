@@ -7,6 +7,9 @@ let currentMenuItem = 1;
 // Holds the callback functions for all of the menu buttons on screen
 let currentMenuCallbacks = []
 
+let previousMenus = [];
+let currentMenu = "";
+
 // Dummy functions
 function connectSub() {
     console.log("Connecting");
@@ -143,18 +146,34 @@ function setMenu(heading, button1, button2, button3) {
 
 // Makes the main menu
 function mainMenu() {
+    previousMenus.push(currentMenu);
+    currentMenu = "mainMenu";
+    // Make and display the menu
     setMenu("WaterPi Controller", {"label": "Connect", "callback": connectSub}, {"label": "Options", "callback": options}, {"label": "Shutdown", "callback": exit});
 }
 
 // Called when the options button is pressed
 function options() {
+    previousMenus.push(currentMenu);
+    currentMenu = "options";
     // Make and display the menu
-    setMenu("Options", {"label": "Connection Details", "callback": optionsButton1}, {"label": "Update", "callback": optionsButton2}, {"label": "Back", "callback": optionsBack});
+    setMenu("Options", {"label": "Connection Details", "callback": optionsButton1}, {"label": "Update", "callback": optionsButton2}, {"label": "Back", "callback": backButton});
 }
 
-// When the back button is pressed on the options menu
-function optionsBack() {
-    mainMenu();
+// Function for button which goes back to the previous menu
+function backButton() {
+    let previousMenu = previousMenus.pop();
+    switch (previousMenu) {
+        case "mainMenu":
+            mainMenu();
+            break;
+        case "options":
+            options();
+            break;
+        default:
+            mainMenu();
+            break;
+    }
 }
 
 // Runs when a menu item is selected
