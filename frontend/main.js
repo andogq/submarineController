@@ -197,6 +197,23 @@ function shutdown() {
     joystickIndex = undefined;
 }
 
+// Sends a message to update the controller
+function update() {
+    server.send("update");
+    // Display a message
+    setMenu("Updating software.....");
+}
+
+// Runs when the update is finished
+function updateComplete() {
+    // Alert the user it finished
+    setMenu("Update complete");
+    // Wait 2 seconds before going to the previous screen
+    setTimeout(function() {
+        backButton();
+    }, 1000);
+}
+
 // Set up the websocket connection
 let server = new WebSocket("ws://0.0.0.0:" + webserverPort);
 
@@ -206,6 +223,15 @@ server.onopen = function(event) {
 
 server.onmessage = function(event) {
     console.log("Message from server");
+
+    // Call the relevant function
+    switch (event.data) {
+        case "updateComplete":
+            updateComplete();
+            break;
+        default:
+            console.log("Unknown command " + event.data);
+    }
 }
 
 mainMenu();

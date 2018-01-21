@@ -8,7 +8,7 @@ console.log("[+] Importing modules\n");
 
 var http = require("http");
 var fs = require("fs");
-require("shelljs/global");
+var shelljs = require("shelljs");
 var ws = require("ws");
 
 
@@ -98,19 +98,31 @@ function shutdown() {
     // If not developer, shutdown the server
     if (!developerMode) {
         console.log("\n[+] Shutting down the controller");
-        exec("sudo shutdown now");
+        shelljs.exec("sudo shutdown now");
     } else {
         console.log("\n[+] Terminating program");
         process.exit();
     }
 }
 
+function update(websocket) {
+    console.log("[+] Updating software");
+    // Update goes here
+    shelljs.exec("git pull", function() {
+        websocket.send("updateComplete");
+        console.log("[+] Update complete\n");
+    });
+}
+
 // Event listener for when something connects
-function websocketServerIncommingMessage(message) {
+function websocketServerIncommingMessage(message, websocket) {
     console.log("\n        [+] Message received from client");
     switch (message) {
         case "shutdown":
             shutdown();
+            break;
+        case "update":
+            update(websocket);
             break;
         default:
             console.log("            [!] Unknown command " + message);
@@ -124,7 +136,7 @@ function websocketServerConnect(websocket) {
 
     // Event listener for when theres data sent
     websocket.on("message", function(message) {
-        websocketServerIncommingMessage(message);
+        websocketServerIncommingMessage(message, websocket);
     });
 }
 
@@ -144,5 +156,5 @@ if (fs.existsSync("../.submarineDev")) {
     console.log("[+] Developer machine; Not launching Chromium")
 } else {
     console.log("[+] Launching web browser");
-    exec("chromium-browser --app=http://0.0.0.0:" + webserverPort + " --start-fullscreen &", {silent: true});
+    shelljs.exec("chromium-browser --app=http://0.0.0.0:" + webserverPort + " --start-fullscreen &", {silent: true});
 }
