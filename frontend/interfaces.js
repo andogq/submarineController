@@ -15,16 +15,16 @@ function connectSub() {
     console.log("Connecting");
 }
 
-function exit() {
-    console.log("Exiting");
-}
-
 function optionsButton1() {
     console.log("Options button 1");
 }
 
 function optionsButton2() {
     console.log("Options button 2");
+}
+
+function shutdown() {
+    console.log("Shutdown controller")
 }
 
 // Makes and returns a button
@@ -110,10 +110,13 @@ function makeMenu(heading, button1, button2, button3) {
     // Buttons
     let buttons = [button1, button2, button3];
     for (i=0; i<buttons.length; i++) {
-        // If it's the first button then select it
-        let buttonClass = i == 0 ? ["buttonSelected"] : undefined;
-        let domButton = makeButton(undefined, buttonClass, buttons[i]);
-        domMenu.appendChild(domButton);
+        // Make sure that there's a button
+        if (buttons[i] != undefined) {
+            // If it's the first button then select it
+            let buttonClass = i == 0 ? ["buttonSelected"] : undefined;
+            let domButton = makeButton(undefined, buttonClass, buttons[i]);
+            domMenu.appendChild(domButton);
+        }
     }
 
     return domMenu
@@ -125,6 +128,11 @@ function setMenu(heading, button1, button2, button3) {
         domInterface.removeChild(domInterface.children[0]);
     }
 
+    // Make sure that there are buttons there
+    button1 = button1 == undefined ? {"label": undefined, "callback": undefined} : button1
+    button2 = button2 == undefined ? {"label": undefined, "callback": undefined} : button2
+    button3 = button3 == undefined ? {"label": undefined, "callback": undefined} : button3
+
     // Make and append the menu
     let menu = makeMenu(heading, button1.label, button2.label, button3.label);
     domInterface.appendChild(menu);
@@ -132,7 +140,7 @@ function setMenu(heading, button1, button2, button3) {
     // Padding to match up with everything else
     let buttons = [undefined, button1, button2, button3]
     for (i=0; i<buttons.length; i++) {
-        if (buttons[i] != undefined) {
+        if (buttons[i] != undefined && buttons[i].callback != undefined) {
             currentMenuCallbacks[i] = buttons[i].callback;
         }
     }
@@ -149,7 +157,7 @@ function mainMenu() {
     previousMenus.push(currentMenu);
     currentMenu = "mainMenu";
     // Make and display the menu
-    setMenu("WaterPi Controller", {"label": "Connect", "callback": connectSub}, {"label": "Options", "callback": options}, {"label": "Shutdown", "callback": exit});
+    setMenu("WaterPi Controller", {"label": "Connect", "callback": connectSub}, {"label": "Options", "callback": options}, {"label": "Shutdown", "callback": shutdownConfirm});
 }
 
 // Called when the options button is pressed
@@ -158,6 +166,12 @@ function options() {
     currentMenu = "options";
     // Make and display the menu
     setMenu("Options", {"label": "Connection Details", "callback": optionsButton1}, {"label": "Update", "callback": optionsButton2}, {"label": "Back", "callback": backButton});
+}
+
+function shutdownConfirm() {
+    previousMenus.push(currentMenu);
+    currentMenu = "shutdownConfirm";
+    setMenu("Confirm Shutdown?", {"label": "No", "callback": backButton}, {"label": "Yes", "callback": shutdown});
 }
 
 // Function for button which goes back to the previous menu

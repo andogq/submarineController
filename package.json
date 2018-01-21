@@ -17,6 +17,7 @@
   },
   "homepage": "https://github.com/tom-ando/submarineController#readme",
   "dependencies": {
-    "shelljs": "^0.8.0"
+    "shelljs": "^0.8.0",
+    "ws": "^4.0.0"
   }
 }

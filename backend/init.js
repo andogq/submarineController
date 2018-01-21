@@ -9,6 +9,7 @@ console.log("[+] Importing modules\n");
 var http = require("http");
 var fs = require("fs");
 require("shelljs/global");
+var ws = require("ws");
 
 
 // Open static files
@@ -93,8 +94,53 @@ var webserver = http.createServer(incomingRequest);
 console.log("[+] Starting webserver on port " + webserverPort + "\n");
 webserver.listen(webserverPort);
 
+function shutdown() {
+    // If not developer, shutdown the server
+    if (!developerMode) {
+        console.log("\n[+] Shutting down the controller");
+        exec("sudo shutdown now");
+    } else {
+        console.log("\n[+] Terminating program");
+        process.exit();
+    }
+}
+
+// Event listener for when something connects
+function websocketServerIncommingMessage(message) {
+    console.log("\n        [+] Message received from client");
+    switch (message) {
+        case "shutdown":
+            shutdown();
+            break;
+        default:
+            console.log("            [!] Unknown command " + message);
+            break;
+    }
+}
+
+// Function for when the client connects to the websocket server
+function websocketServerConnect(websocket) {
+    console.log("    [+] Websocket connection");
+
+    // Event listener for when theres data sent
+    websocket.on("message", function(message) {
+        websocketServerIncommingMessage(message);
+    });
+}
+
+// Start the websocket server
+console.log("[+] Starting the websocket server\n");
+var websocketServer = new ws.Server({server: webserver});
+
+// Event listener for when somthing connects to the server
+websocketServer.on("connection", function(ws) {
+    websocketServerConnect(ws);
+});
+
+var developerMode = false;
 // Check if running on developer machine
 if (fs.existsSync("../.submarineDev")) {
+    developerMode = true;
     console.log("[+] Developer machine; Not launching Chromium")
 } else {
     console.log("[+] Launching web browser");

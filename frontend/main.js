@@ -1,6 +1,9 @@
 // Global variable of the joystick id. Can't store the actual joystick because it retains the state of the buttons
 let joystickIndex;
 
+// Default port for the webserver
+let webserverPort = 8000;
+
 // Holds reference to functions that need to be run for each particular move
 let joystickEvent = {
     "trigger": function() {return;},
@@ -184,5 +187,25 @@ window.addEventListener("gamepadconnected", function(e) {
     // Start the main loop
     requestAnimationFrame(mainLoop);
 });
+
+// Send message to server to suhutdown
+function shutdown() {
+    server.send("shutdown");
+    // Display a message
+    setMenu("Shutting down controller");
+    // Remove the joystick so the user can't do anything
+    joystickIndex = undefined;
+}
+
+// Set up the websocket connection
+let server = new WebSocket("ws://0.0.0.0:" + webserverPort);
+
+server.onopen = function(event) {
+    console.log("Websocket connected");
+}
+
+server.onmessage = function(event) {
+    console.log("Message from server");
+}
 
 mainMenu();
