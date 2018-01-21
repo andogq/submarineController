@@ -19,14 +19,6 @@ function optionsButton1() {
     console.log("Options button 1");
 }
 
-function optionsButton2() {
-    console.log("Options button 2");
-}
-
-function shutdown() {
-    console.log("Shutdown controller")
-}
-
 // Makes and returns a button
 function makeButton(id, classList, innerHTML) {
     // New button
@@ -165,7 +157,7 @@ function options() {
     previousMenus.push(currentMenu);
     currentMenu = "options";
     // Make and display the menu
-    setMenu("Options", {"label": "Connection Details", "callback": optionsButton1}, {"label": "Update", "callback": optionsButton2}, {"label": "Back", "callback": backButton});
+    setMenu("Options", {"label": "Connection Details", "callback": optionsButton1}, {"label": "Update", "callback": update}, {"label": "Back", "callback": backButton});
 }
 
 function shutdownConfirm() {
