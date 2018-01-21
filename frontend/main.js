@@ -190,7 +190,11 @@ window.addEventListener("gamepadconnected", function(e) {
 
 // Send message to server to suhutdown
 function shutdown() {
-    server.send("shutdown")
+    server.send("shutdown");
+    // Display a message
+    setMenu("Shutting down controller");
+    // Remove the joystick so the user can't do anything
+    joystickIndex = undefined;
 }
 
 // Set up the websocket connection
