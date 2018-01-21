@@ -42,13 +42,13 @@ button {
     display: table;                             /* Vertically align main menu */
 }
 
-#mainMenu {
+#menu {
     /* Other */
     display: table-cell;                        /* Vertically align main menu */
     vertical-align: middle;                     /* Vertically align main menu */
 }
 
-#mainMenu > * {
+#menu > * {
     width: 50%;                                 /* Vertically align main menu */
     margin: 2.5% auto;                          /* Vertically align main menu */
 }

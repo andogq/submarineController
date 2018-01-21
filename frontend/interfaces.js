@@ -4,19 +4,8 @@ let domInterface = document.getElementById("interface");
 // Current item for the main menu (index 1, 0th item is heading)
 let currentMenuItem = 1;
 
-// Main menu functions. Undefined to keep it lined up with the children of the main menu
-let mainMenuFunctions = [undefined,
-    connectSub,
-    options,
-    exit
-]
-
-// Option menu functions. First item is the title so it's never selected
-let optionsMenuFunctions = [undefined,
-    optionsButton1,
-    optionsButton2,
-    optionsBack
-]
+// Holds the callback functions for all of the menu buttons on screen
+let currentMenuCallbacks = []
 
 // Dummy functions
 function connectSub() {
@@ -103,93 +92,74 @@ function menuNavigate(joystick) {
     }
 }
 
-// Called when the options button is pressed
-function options() {
-    // Hide the main menu
-    domInterface.removeChild(domInterface.children[0]);
-
-    // Container for the options menu
-    let domOptionsMenu = document.createElement("div");
-    domOptionsMenu.id = "mainMenu"
+// Makes a menu with 3 buttons and a heading
+function makeMenu(heading, button1, button2, button3) {
+    // Container
+    let domMenu = document.createElement("div");
+    domMenu.id = "menu";
 
     // Heading
-    let domMainMenuHeading = makeHeading(1, undefined, ["menuHeading"], "Options");
-    domOptionsMenu.appendChild(domMainMenuHeading);
-
-    // Make 3 buttons
-    let button1 = makeButton(undefined, ["buttonSelected"], "Connection Details");
-    domOptionsMenu.appendChild(button1);
-
-    let button2 = makeButton(undefined, undefined, "Update");
-    domOptionsMenu.appendChild(button2);
-
-    let backButton = makeButton(undefined, undefined, "Back");
-    domOptionsMenu.appendChild(backButton);
-
-    domInterface.appendChild(domOptionsMenu);
-
-    // Set the joystick to navigate the menu
-    setJoystickOptionsMenu();
-}
-
-function optionsBack() {
-    // Remove the current menu
-    domInterface.removeChild(domInterface.children[0]);
-    mainMenu();
-}
-
-// Sets the joystick for the options menu
-function setJoystickOptionsMenu() {
-    // Reset the menu position to the first item (not including the heading)
-    currentMenuItem = 1;
-    joystickEvent.axesMiniUpDown = menuNavigate;
-    joystickEvent.trigger = optionsMenuSelect;
-}
-
-// Runs the function attached to the current menu item
-function optionsMenuSelect() {
-    if (buttonNotHeld("trigger")) {
-        optionsMenuFunctions[currentMenuItem]();
+    if (heading != "" && heading != undefined) {
+        let domMenuHeading = makeHeading(1, undefined, ["menuHeading"], heading);
+        domMenu.appendChild(domMenuHeading);
     }
-}
 
-// Runs the function attached to the current menu item
-function mainMenuSelect() {
-    if (buttonNotHeld("trigger")) {
-        mainMenuFunctions[currentMenuItem]();
+    // Buttons
+    let buttons = [button1, button2, button3];
+    for (i=0; i<buttons.length; i++) {
+        // If it's the first button then select it
+        let buttonClass = i == 0 ? ["buttonSelected"] : undefined;
+        let domButton = makeButton(undefined, buttonClass, buttons[i]);
+        domMenu.appendChild(domButton);
     }
+
+    return domMenu
 }
 
-// Sets the joystick for the main menu
-function setJoystickMainMenu() {
-    // Reset the menu position to the first item (not including the heading)
+function setMenu(heading, button1, button2, button3) {
+    // If there's something there delete it
+    if (domInterface.children.length > 0) {
+        domInterface.removeChild(domInterface.children[0]);
+    }
+
+    // Make and append the menu
+    let menu = makeMenu(heading, button1.label, button2.label, button3.label);
+    domInterface.appendChild(menu);
+
+    // Padding to match up with everything else
+    let buttons = [undefined, button1, button2, button3]
+    for (i=0; i<buttons.length; i++) {
+        if (buttons[i] != undefined) {
+            currentMenuCallbacks[i] = buttons[i].callback;
+        }
+    }
+
+    // Reset the selected item
     currentMenuItem = 1;
+
     joystickEvent.axesMiniUpDown = menuNavigate;
-    joystickEvent.trigger = mainMenuSelect;
+    joystickEvent.trigger = menuSelect;
 }
 
 // Makes the main menu
 function mainMenu() {
-    // Container for the main menu
-    let domMainMenu = document.createElement("div");
-    domMainMenu.id = "mainMenu"
+    setMenu("WaterPi Controller", {"label": "Connect", "callback": connectSub}, {"label": "Options", "callback": options}, {"label": "Shutdown", "callback": exit});
+}
 
-    // Heading
-    let domMainMenuHeading = makeHeading(1, undefined, ["menuHeading"], "WaterPi Controller");
-    domMainMenu.appendChild(domMainMenuHeading);
+// Called when the options button is pressed
+function options() {
+    // Make and display the menu
+    setMenu("Options", {"label": "Connection Details", "callback": optionsButton1}, {"label": "Update", "callback": optionsButton2}, {"label": "Back", "callback": optionsBack});
+}
 
-    // Make 3 buttons
-    let connectButton = makeButton(undefined, ["buttonSelected"], "Connect");
-    domMainMenu.appendChild(connectButton);
+// When the back button is pressed on the options menu
+function optionsBack() {
+    mainMenu();
+}
 
-    let optionsButton = makeButton(undefined, undefined, "Options");
-    domMainMenu.appendChild(optionsButton);
-
-    let exitButton = makeButton(undefined, undefined, "Shutdown");
-    domMainMenu.appendChild(exitButton);
-
-    domInterface.appendChild(domMainMenu);
-
-    // Set the joystick to navigate the menu
-    setJoystickMainMenu();
+// Runs when a menu item is selected
+function menuSelect() {
+    if (buttonNotHeld("trigger")) {
+        currentMenuCallbacks[currentMenuItem]();
+    }
 }
