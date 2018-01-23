@@ -108,15 +108,30 @@ function shutdown() {
 function update(websocket) {
     console.log("[+] Updating software");
     // Update goes here
-    shelljs.exec("git pull", function() {
-        websocket.send("updateComplete");
-        console.log("[+] Update complete\n");
+    shelljs.exec("git pull", {silent: true}, function(code, stdout, stderr) {
+        // Pulled successfully
+        if (code == 0) {
+            websocket.send("updateComplete");
+            console.log("[+] Update complete\n");
+        } else {
+            // Something went wrong
+            websocket.send("updateFailed")
+            console.log("[!] Update failed");
+
+            // Print out the error line by line
+            for (line of stderr.split("\n")) {
+                if (line != "") {
+                    console.log("    [!] " + line);
+                }
+            }
+            console.log("\n")
+        }
     });
 }
 
 // Event listener for when something connects
 function websocketServerIncommingMessage(message, websocket) {
-    console.log("\n        [+] Message received from client");
+    console.log("        [+] Message received from client\n");
     switch (message) {
         case "shutdown":
             shutdown();

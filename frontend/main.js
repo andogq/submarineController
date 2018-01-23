@@ -205,9 +205,10 @@ function update() {
 }
 
 // Runs when the update is finished
-function updateComplete() {
+function updateComplete(success) {
     // Alert the user it finished
-    setMenu("Update complete");
+    var message = success ? "Update complete" : "Failed to update";
+    setMenu(message);
     // Wait 2 seconds before going to the previous screen
     setTimeout(function() {
         backButton();
@@ -227,7 +228,10 @@ server.onmessage = function(event) {
     // Call the relevant function
     switch (event.data) {
         case "updateComplete":
-            updateComplete();
+            updateComplete(true);
+            break;
+        case "updateFailed":
+            updateComplete(false);
             break;
         default:
             console.log("Unknown command " + event.data);
