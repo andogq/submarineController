@@ -202,6 +202,9 @@ function update() {
     server.send("update");
     // Display a message
     setMenu("Updating software.....");
+
+    previousMenus.push(currentMenu);
+    currentMenu = "update";
 }
 
 // Runs when the update is finished
