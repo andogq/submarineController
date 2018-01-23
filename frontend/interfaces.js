@@ -19,6 +19,11 @@ function optionsButton1() {
     console.log("Options button 1");
 }
 
+// Used as a callback when a button won't do anything
+function noClick() {
+    return;
+}
+
 // Makes and returns a button
 function makeButton(id, classList, innerHTML) {
     // New button
@@ -134,6 +139,9 @@ function setMenu(heading, button1, button2, button3) {
     for (i=0; i<buttons.length; i++) {
         if (buttons[i] != undefined && buttons[i].callback != undefined) {
             currentMenuCallbacks[i] = buttons[i].callback;
+        } else {
+            // If there is no button then make the callback do nothing
+            currentMenuCallbacks[i] = noClick;
         }
     }
 
