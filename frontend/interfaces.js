@@ -162,7 +162,12 @@ function connectionDetails() {
 }
 
 function wifiNetwork() {
-    console.log("WiFi network");
+    setMenu("Loading WiFi Network Details", {label: "Back", callback: connectionDetails});
+    server.send("getWiFiNetwork");
+}
+
+function wifiNetworkCallback(ssid) {
+    setMenu("WiFi Network Details", {label: "SSID: " + ssid, callback: noClick}, {label: "Back", callback: connectionDetails});
 }
 
 function submarineNetwork() {

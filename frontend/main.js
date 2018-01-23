@@ -225,13 +225,18 @@ server.onopen = function(event) {
 server.onmessage = function(event) {
     console.log("Message from server");
 
+    data = JSON.parse(event.data);
+
     // Call the relevant function
-    switch (event.data) {
+    switch (data[0]) {
         case "updateComplete":
             updateComplete(true);
             break;
         case "updateFailed":
             updateComplete(false);
+            break;
+        case "wifiNetwork":
+            wifiNetworkCallback(data[1]);
             break;
         default:
             console.log("Unknown command " + event.data);

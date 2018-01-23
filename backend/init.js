@@ -111,11 +111,11 @@ function update(websocket) {
     shelljs.exec("git pull", {silent: true}, function(code, stdout, stderr) {
         // Pulled successfully
         if (code == 0) {
-            websocket.send("updateComplete");
+            websocket.send(JSON.stringify(["updateComplete"]));
             console.log("[+] Update complete\n");
         } else {
             // Something went wrong
-            websocket.send("updateFailed")
+            websocket.send(JSON.stringify(["updateFailed"]));
             console.log("[!] Update failed");
 
             // Print out the error line by line
@@ -124,8 +124,15 @@ function update(websocket) {
                     console.log("    [!] " + line);
                 }
             }
-            console.log("\n")
+            console.log("\n");
         }
+    });
+}
+
+function wifiDetails(websocket) {
+    console.log("[+] Getting WiFi network details");
+    shelljs.exec("iwgetid -r", {silent: true}, function(code, stdout) {
+        websocket.send(JSON.stringify(["wifiNetwork", stdout]));
     });
 }
 
@@ -138,6 +145,9 @@ function websocketServerIncommingMessage(message, websocket) {
             break;
         case "update":
             update(websocket);
+            break;
+        case "getWiFiNetwork":
+            wifiDetails(websocket);
             break;
         default:
             console.log("            [!] Unknown command " + message);
