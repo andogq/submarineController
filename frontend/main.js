@@ -202,9 +202,6 @@ function update() {
     server.send("update");
     // Display a message
     setMenu("Updating software.....");
-
-    previousMenus.push(currentMenu);
-    currentMenu = "update";
 }
 
 // Runs when the update is finished
@@ -214,7 +211,7 @@ function updateComplete(success) {
     setMenu(message);
     // Wait 2 seconds before going to the previous screen
     setTimeout(function() {
-        backButton();
+        options();
     }, 1000);
 }
 

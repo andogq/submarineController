@@ -7,16 +7,9 @@ let currentMenuItem = 1;
 // Holds the callback functions for all of the menu buttons on screen
 let currentMenuCallbacks = []
 
-let previousMenus = [];
-let currentMenu = "";
-
 // Dummy functions
 function connectSub() {
     console.log("Connecting");
-}
-
-function optionsButton1() {
-    console.log("Options button 1");
 }
 
 // Used as a callback when a button won't do anything
@@ -126,9 +119,9 @@ function setMenu(heading, button1, button2, button3) {
     }
 
     // Make sure that there are buttons there
-    button1 = button1 == undefined ? {"label": undefined, "callback": undefined} : button1
-    button2 = button2 == undefined ? {"label": undefined, "callback": undefined} : button2
-    button3 = button3 == undefined ? {"label": undefined, "callback": undefined} : button3
+    button1 = button1 == undefined ? {label: undefined, callback: undefined} : button1
+    button2 = button2 == undefined ? {label: undefined, callback: undefined} : button2
+    button3 = button3 == undefined ? {label: undefined, callback: undefined} : button3
 
     // Make and append the menu
     let menu = makeMenu(heading, button1.label, button2.label, button3.label);
@@ -154,40 +147,22 @@ function setMenu(heading, button1, button2, button3) {
 
 // Makes the main menu
 function mainMenu() {
-    previousMenus.push(currentMenu);
-    currentMenu = "mainMenu";
     // Make and display the menu
-    setMenu("WaterPi Controller", {"label": "Connect", "callback": connectSub}, {"label": "Options", "callback": options}, {"label": "Shutdown", "callback": shutdownConfirm});
+    setMenu("WaterPi Controller", {label: "Connect", callback: connectSub}, {label: "Options", callback: options}, {label: "Shutdown", callback: shutdownConfirm});
 }
 
 // Called when the options button is pressed
 function options() {
-    previousMenus.push(currentMenu);
-    currentMenu = "options";
-    // Make and display the menu
-    setMenu("Options", {"label": "Connection Details", "callback": optionsButton1}, {"label": "Update", "callback": update}, {"label": "Back", "callback": backButton});
+    setMenu("Options", {label: "Connection Details", callback: connectionDetails}, {label: "Update", callback: update}, {label: "Back", callback: mainMenu});
+}
+
+function connectionDetails() {
+    setMenu("Connection Details", {label: "WiFi Network", callback: wifiNetwork}, {label: "Submarine Network", callback: submarineNetwork}, {label: "Back", callback: options});
 }
 
 function shutdownConfirm() {
-    previousMenus.push(currentMenu);
     currentMenu = "shutdownConfirm";
-    setMenu("Confirm Shutdown?", {"label": "No", "callback": backButton}, {"label": "Yes", "callback": shutdown});
-}
-
-// Function for button which goes back to the previous menu
-function backButton() {
-    let previousMenu = previousMenus.pop();
-    switch (previousMenu) {
-        case "mainMenu":
-            mainMenu();
-            break;
-        case "options":
-            options();
-            break;
-        default:
-            mainMenu();
-            break;
-    }
+    setMenu("Confirm Shutdown?", {label: "No", callback: mainMenu}, {label: "Yes", callback: shutdown});
 }
 
 // Runs when a menu item is selected
