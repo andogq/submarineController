@@ -160,6 +160,14 @@ function connectionDetails() {
     setMenu("Connection Details", {label: "WiFi Network", callback: wifiNetwork}, {label: "Submarine Network", callback: submarineNetwork}, {label: "Back", callback: options});
 }
 
+function wifiNetwork() {
+    console.log("WiFi network");
+}
+
+function submarineNetwork() {
+    console.log("Submarine network");
+}
+
 function shutdownConfirm() {
     currentMenu = "shutdownConfirm";
     setMenu("Confirm Shutdown?", {label: "No", callback: mainMenu}, {label: "Yes", callback: shutdown});
