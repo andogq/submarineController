@@ -68,19 +68,20 @@ function menuNavigate(joystick) {
     if (buttonNotHeld("axesMiniUpDown")) { // Prevent spamming
         let domMenuChildren = document.getElementById("interface").children[0].children;
         let menuLength = domMenuChildren.length - 1;
-
-        if (joystick.axes[5] > 0) {
-            // Move menu selection down one
-            domMenuChildren[currentMenuItem].classList.remove("buttonSelected");
-            // Make sure it doesn't go past the last element
-            currentMenuItem = currentMenuItem < menuLength ? currentMenuItem + 1 : menuLength;
-            domMenuChildren[currentMenuItem].classList.add("buttonSelected");
-        } else if (joystick.axes[5] < 0) {
-            // Move menu selection up one
-            domMenuChildren[currentMenuItem].classList.remove("buttonSelected");
-            // Make sure it doesn't go past the last element
-            currentMenuItem = currentMenuItem > 1 ? currentMenuItem - 1 : 1;
-            domMenuChildren[currentMenuItem].classList.add("buttonSelected");
+        if (domMenuChildren.length > 1) {
+            if (joystick.axes[5] > 0) {
+                // Move menu selection down one
+                domMenuChildren[currentMenuItem].classList.remove("buttonSelected");
+                // Make sure it doesn't go past the last element
+                currentMenuItem = currentMenuItem < menuLength ? currentMenuItem + 1 : menuLength;
+                domMenuChildren[currentMenuItem].classList.add("buttonSelected");
+            } else if (joystick.axes[5] < 0) {
+                // Move menu selection up one
+                domMenuChildren[currentMenuItem].classList.remove("buttonSelected");
+                // Make sure it doesn't go past the last element
+                currentMenuItem = currentMenuItem > 1 ? currentMenuItem - 1 : 1;
+                domMenuChildren[currentMenuItem].classList.add("buttonSelected");
+            }
         }
     }
 }
