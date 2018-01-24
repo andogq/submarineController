@@ -146,13 +146,16 @@ function changeWifi(client) {
                     stdout = stdout.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
                     stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
 
-                    shelljs.exec("echo '" + stdout + "' > wpa.txt", function(code, stdout, stderr) {
-                        client.send(JSON.stringify("changeWifiFail", code + " " + stdout + " " + stderr));
+                    fs.writeFile("wpa.txt", stdout, function(stderr) {
+                        if (err) {
+                            client.send(JSON.stringify(["changeWifiFail", stderr]));
+                        } else {
+                            client.send(JSON.stringify(["changeWifiSuccess"]));
+                        }
                     });
                 });
             }
 
-            client.send(JSON.stringify(["changeWifiSuccess"]));
             //if (!devMode()) shelljs.exec("sudo reboot now");
         });
     });
