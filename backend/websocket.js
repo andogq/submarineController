@@ -64,7 +64,7 @@ function shutdown() {
 // Command to update the controller
 function update(websocket) {
     console.log("[+] Updating software");
-    if (!devMode) {
+    if (!devMode()) {
         shelljs.exec("git pull", {silent: true}, function(code, stdout, stderr) {
             // Pulled successfully
             if (code == 0) {
