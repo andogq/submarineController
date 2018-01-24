@@ -71,10 +71,10 @@ function update(websocket) {
                 websocket.send(JSON.stringify(["updateComplete"]));
                 console.log("[+] Update complete. Rebooting in 2 seconds\n");
 
-                // Wait 2 seconds before rebooting
+                // Wait 1 second before rebooting
                 setTimeout(function() {
                     shelljs.exec("sudo reboot now", {silent: true});
-                }, 2000);
+                }, 1000);
             } else {
                 // Something went wrong
                 websocket.send(JSON.stringify(["updateFailed"]));
