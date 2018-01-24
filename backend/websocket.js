@@ -147,7 +147,7 @@ function changeWifi(client) {
                     stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
 
                     shelljs.exec("echo '" + stdout + "' > wpa.txt", function(code, stdout, stderr) {
-                        client.send(code + " " + stdout + " " + stderr);
+                        client.send(JSON.stringify("changeWifiFail", code + " " + stdout + " " + stderr));
                     });
                 });
             }
