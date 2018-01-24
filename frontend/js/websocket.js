@@ -23,6 +23,12 @@ function websocketMessage(event) {
         case "wifiNetwork":
             wifiNetworkCallback(data[1]);
             break;
+        case "changeWifiSuccess":
+            changeWifiSuccess();
+            break;
+        case "changeWifiFail":
+            changeWifiFail(data[1]);
+            break;
         default:
             console.log("Unknown command " + event.data);
     }
@@ -53,10 +59,30 @@ function updateComplete(success) {
     var message = success ? "Update complete. Now rebooting" : "Failed to update";
     // Timeout 2.5 seconds if developer mode, but long enough that the real user won't know
     var timeout = success ? 2500 : 1000;
-    
+
     setMenu(message);
     // Wait
     setTimeout(function() {
         options();
     }, timeout);
+}
+ // Send to the server to scan for a USB
+ function changeWifi() {
+     server.send("changeWifi");
+ }
+
+// Function called when the wifi change fails
+function changeWifiFail(reason) {
+    setMenu("Error: " + reason,
+        {label: "Back", callback: changeWifiNetwork}
+    );
+}
+
+// Function called whem the wifi change works
+function changeWifiSuccess() {
+    setMenu("WiFi network successfully changed. Now rebooting");
+    // Just incase developer mode is on, the menu will come back eventually
+    setTimeout(function() {
+        changeWifiNetwork();
+    }, 2500);
 }

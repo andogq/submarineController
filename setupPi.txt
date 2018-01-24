@@ -80,4 +80,6 @@ cd /home/pi
 30. Open "/etc/xdg/lxsession/LXDE/autostart" with "sudo nano /etc/xdg/lxsession/LXDE/autostart" and add "@unclutter -idle 0.1 -root" to the bottom
 31. Open "/etc/lightdm/lightdm.conf" with "sudo nano /etc/lightdm/lightdm.conf"
 32. Add "xserver-command=X -s 0 -dpms" under the section "[SeatDefaults]"
+33. Open "/home/pi/.config/pcmanfm/LXDE-pi/pcmanfm.conf" with "nano /home/pi/.config/pcmanfm/LXDE-pi/pcmanfm.conf"
+34. Set "auttorun=0" under "[Volumes]" 
 33. Reboot and everything should load up
