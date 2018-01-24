@@ -141,16 +141,16 @@ function changeWifi(client) {
             } else {
                 console.log("    [+] Changing WiFi details");
                 // Open the wpa_supplicant file. Use the shell to get permissions
-                shelljs.exec("sudo cat /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
-                    if (stderr) {
-                        client.send(JSON.stringify(["changeWifiFail", stderr]));
+                shelljs.exec("sudo cat /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, wpa_file, stderr) {
+                    if (stderr || code != 0) {
+                        client.send(JSON.stringify(["changeWifiFail", stderr + " " + code]));
                     } else {
                         // Swap the ssid and psk
-                        stdout = stdout.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
-                        stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
+                        wpa_file = wpa_file.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
+                        wpa_file = wpa_file.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
 
                         // Write to the wifi file
-                        shelljs.exec("echo '" + stdout + "' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
+                        shelljs.exec("echo '" + wpa_file + "' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
                             if (err) {
                                 // Something went wrong
                                 client.send(JSON.stringify(["changeWifiFail", stderr]));
