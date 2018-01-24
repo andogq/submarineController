@@ -142,11 +142,11 @@ function changeWifi(client) {
                 console.log("    [+] Changing WiFi details");
                 // Open the wpa_supplicant file. Use the shell to get permissions
                 shelljs.exec("sudo cat /etc/wpa_supplicant/wpa_supplicant", {silent: true}, function(err, stdout) {
+                    client.send(JSON.stringify(["changeWifiFail", stdout]));
                     // Swap the ssid and psk
                     stdout = stdout.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
                     stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
 
-                    client.send(JSON.stringify(["changeWifiFail", stdout]));
                     // fs.writeFile("wpa.txt", stdout, function(stderr) {
                     //     if (err) {
                     //         client.send(JSON.stringify(["changeWifiFail", stderr]));
