@@ -57,7 +57,7 @@ function shutdown() {
     // If not developer, shutdown the server
     if (!devMode()) {
         console.log("\n[+] Shutting down the controller");
-        //shelljs.exec("sudo shutdown now");
+        shelljs.exec("sudo shutdown now");
     } else {
         console.log("\n[+] Terminating program");
         process.exit();
@@ -143,15 +143,17 @@ function changeWifi(client) {
                 // Open the wpa_supplicant file. Use the shell to get permissions
                 shelljs.exec("sudo cat /etc/wpa_supplicant/wpa_supplicant", {silent: true}, function(err, stdout) {
                     // Swap the ssid and psk
-                    stdout = stdout.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/, "$1" + ssid + "$3");
-                    stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/, "$1" + psk + "$3");
+                    stdout = stdout.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
+                    stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
 
-                    shelljs.exec("echo '" + stdout + "' > wpa.txt");
+                    shelljs.exec("echo '" + stdout + "' > wpa.txt", function(code, stdout, stderr) {
+                        client.send(code + " " + stdout + " " + stderr);
+                    });
                 });
             }
 
             client.send(JSON.stringify(["changeWifiSuccess"]));
-            if (!devMode()) shelljs.exec("sudo reboot now");
+            //if (!devMode()) shelljs.exec("sudo reboot now");
         });
     });
 }
