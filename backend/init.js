@@ -16,7 +16,7 @@ var ws = require("ws");
 console.log("[+] Opening static files");
 
 var staticFiles = {};
-const staticFileNames = ["index.html", "main.css", "main.js", "interfaces.js", "joystick.js"];
+const staticFileNames = ["index.html", "main.css", "main.js", "interfaces.js", "joystick.js", "websocket.js"];
 
 // Function to open and save a file
 function openFile(fileName) {
@@ -65,6 +65,10 @@ function incomingRequest(request, response) {
 
         case "/joystick.js":
             file = staticFiles["joystick.js"];
+            break;
+
+        case "/websocket.js":
+            file = staticFiles["websocket.js"];
             break;
 
         default:
