@@ -64,26 +64,35 @@ function shutdown() {
 // Command to update the controller
 function update(websocket) {
     console.log("[+] Updating software");
-    // Update goes here
-    shelljs.exec("git pull", {silent: true}, function(code, stdout, stderr) {
-        // Pulled successfully
-        if (code == 0) {
-            websocket.send(JSON.stringify(["updateComplete"]));
-            console.log("[+] Update complete\n");
-        } else {
-            // Something went wrong
-            websocket.send(JSON.stringify(["updateFailed"]));
-            console.log("[!] Update failed");
+    if (!devMode) {
+        shelljs.exec("git pull", {silent: true}, function(code, stdout, stderr) {
+            // Pulled successfully
+            if (code == 0) {
+                websocket.send(JSON.stringify(["updateComplete"]));
+                console.log("[+] Update complete. Rebooting in 2 seconds\n");
 
-            // Print out the error line by line
-            for (line of stderr.split("\n")) {
-                if (line != "") {
-                    console.log("    [!] " + line);
+                // Wait 2 seconds before rebooting
+                setTimeout(function() {
+                    shelljs.exec("sudo reboot now", {silent: true});
+                }, 2000);
+            } else {
+                // Something went wrong
+                websocket.send(JSON.stringify(["updateFailed"]));
+                console.log("[!] Update failed");
+
+                // Print out the error line by line
+                for (line of stderr.split("\n")) {
+                    if (line != "") {
+                        console.log("    [!] " + line);
+                    }
                 }
+                console.log("\n");
             }
-            console.log("\n");
-        }
-    });
+        });
+    } else {
+        console.log("    [+] Devmode, not updating or restarting");
+        websocket.send(JSON.stringify(["updateComplete"]));
+    }
 }
 
 // Command to fetch the wifi details

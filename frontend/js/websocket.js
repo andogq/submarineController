@@ -50,10 +50,13 @@ function update() {
 // Runs when the update is finished
 function updateComplete(success) {
     // Alert the user it finished
-    var message = success ? "Update complete" : "Failed to update";
+    var message = success ? "Update complete. Now rebooting" : "Failed to update";
+    // Timeout 2.5 seconds if developer mode, but long enough that the real user won't know
+    var timeout = success ? 2500 : 1000;
+    
     setMenu(message);
-    // Wait 2 seconds before going to the previous screen
+    // Wait
     setTimeout(function() {
         options();
-    }, 1000);
+    }, timeout);
 }
