@@ -7,11 +7,6 @@ let currentMenuItem = 1;
 // Holds the callback functions for all of the menu buttons on screen
 let currentMenuCallbacks = []
 
-// Dummy functions
-function connectSub() {
-    console.log("Connecting");
-}
-
 // Used as a callback when a button won't do anything
 function noClick() {
     return;
@@ -86,6 +81,13 @@ function menuNavigate(joystick) {
     }
 }
 
+// Runs when a menu item is selected
+function menuSelect() {
+    if (buttonNotHeld("trigger")) {
+        currentMenuCallbacks[currentMenuItem]();
+    }
+}
+
 // Makes a menu with 3 buttons and a heading
 function makeMenu(heading, button1, button2, button3) {
     // Container
@@ -144,44 +146,4 @@ function setMenu(heading, button1, button2, button3) {
 
     joystickEvent.axesMiniUpDown = menuNavigate;
     joystickEvent.trigger = menuSelect;
-}
-
-// Makes the main menu
-function mainMenu() {
-    // Make and display the menu
-    setMenu("WaterPi Controller", {label: "Connect", callback: connectSub}, {label: "Options", callback: options}, {label: "Shutdown", callback: shutdownConfirm});
-}
-
-// Called when the options button is pressed
-function options() {
-    setMenu("Options", {label: "Connection Details", callback: connectionDetails}, {label: "Update", callback: update}, {label: "Back", callback: mainMenu});
-}
-
-function connectionDetails() {
-    setMenu("Connection Details", {label: "WiFi Network", callback: wifiNetwork}, {label: "Submarine Network", callback: submarineNetwork}, {label: "Back", callback: options});
-}
-
-function wifiNetwork() {
-    setMenu("Loading WiFi Network Details", {label: "Back", callback: connectionDetails});
-    server.send("getWiFiNetwork");
-}
-
-function wifiNetworkCallback(ssid) {
-    setMenu("WiFi Network Details", {label: "SSID: " + ssid, callback: noClick}, {label: "Back", callback: connectionDetails});
-}
-
-function submarineNetwork() {
-    console.log("Submarine network");
-}
-
-function shutdownConfirm() {
-    currentMenu = "shutdownConfirm";
-    setMenu("Confirm Shutdown?", {label: "No", callback: mainMenu}, {label: "Yes", callback: shutdown});
-}
-
-// Runs when a menu item is selected
-function menuSelect() {
-    if (buttonNotHeld("trigger")) {
-        currentMenuCallbacks[currentMenuItem]();
-    }
 }
