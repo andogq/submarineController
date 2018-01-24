@@ -46,13 +46,24 @@ function wifiNetwork() {
     server.send("getWiFiNetwork");
 }
 
+// Displays the current WiFi network name
 function wifiNetworkCallback(ssid) {
     setMenu("WiFi Network Details",
         {label: "SSID: " + ssid, callback: noClick},
+        {label: "Change", callback: changeWifiNetwork},
         {label: "Back", callback: connectionDetails}
     );
 }
 
+// Displays the current submarine network name
 function submarineNetwork() {
     console.log("Submarine network");
+}
+
+// Menu to change WiFi network
+function changeWifiNetwork() {
+    setMenu("Please insert a USB with the SSID and PSK on a line each in a file called wifi.txt",
+        {label: "Scan", callback: changeWifi},
+        {label: "Back", callback: wifiNetwork}
+    );
 }
