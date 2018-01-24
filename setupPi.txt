@@ -67,7 +67,7 @@ esac
 22. Open ~/.profile with "nano ~/.profile"
 23. Add the following to the top of the file:
 
-cd /home/pi/submarineController/backend/
+cd /home/pi/submarineController/
 node main.js &
 cd /home/pi
 

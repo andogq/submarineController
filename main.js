@@ -22,5 +22,5 @@ if (devMode()) {
     console.log("[+] Developer machine; Not launching Chromium")
 } else {
     console.log("[+] Launching web browser");
-    shelljs.exec("chromium-browser --app=http://0.0.0.0:" + webserverPort + " --start-fullscreen &", {silent: true});
+    shelljs.exec("chromium-browser --app=http://0.0.0.0:" + globals.webserverPort + " --start-fullscreen &", {silent: true});
 }
