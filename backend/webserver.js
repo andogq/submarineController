@@ -38,49 +38,23 @@ function initServer() {
 function incomingRequest(request, response) {
     console.log("    [+] Request received");
 
-    const url = request.url == "/" ? "/index.html" : request.url;
+    // Sets the root request to the index page
+    let url = request.url == "/" ? "/index.html" : request.url;
+
     console.log("        [+] Url: " + url);
 
+    // Gets rid of the opening "/"
+    url = url.replace(/^\//, "");
+
+    let status = 200;
+    let file;
+
     // Send the right file back
-    var file = "";
-    var status = 200;
-
-    switch (url) {
-        case "/":
-            file = globals.staticFiles["index.html"];
-            break;
-
-        case "/index.html":
-            file = globals.staticFiles["index.html"];
-            break;
-
-        case "/main.css":
-            file = globals.staticFiles["main.css"];
-            break;
-
-        case "/main.js":
-            file = globals.staticFiles["main.js"];
-            break;
-
-        case "/interfaces.js":
-            file = globals.staticFiles["interfaces.js"];
-            break;
-
-        case "/joystick.js":
-            file = globals.staticFiles["joystick.js"];
-            break;
-
-        case "/websocket.js":
-            file = globals.staticFiles["websocket.js"];
-            break;
-
-        case "/menus.js":
-            file = globals.staticFiles["menus.js"];
-            break;
-
-        default:
-            status = 404;
-            break;
+    try {
+        file = globals.staticFiles[url];
+    } catch (err) {
+        // File doesn't exist
+        status = 404;
     }
 
     // Set the status code of the response
