@@ -46,16 +46,11 @@ function incomingRequest(request, response) {
     // Gets rid of the opening "/"
     url = url.replace(/^\//, "");
 
-    let status = 200;
-    let file;
-
     // Send the right file back
-    try {
-        file = globals.staticFiles[url];
-    } catch (err) {
-        // File doesn't exist
-        status = 404;
-    }
+    let file = globals.staticFiles[url];
+
+    // Check if the file exists
+    let status = file == undefined ? 404 : 200;
 
     // Set the status code of the response
     response.statusCode = status;
