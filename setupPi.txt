@@ -68,7 +68,8 @@ esac
 23. Add the following to the top of the file:
 
 cd /home/pi/submarineController/backend/
-node init.js &
+node main.js &
+cd /home/pi
 
 24. Change the desktop background with "pcmanfm --set-wallpaper /home/pi/submarineController/media/waterPiSplash.png". Note: Won't work over ssh
 25. Run "passwd" to change the default password for "pi". Make it something easy to remember (eg. WaterPi)
