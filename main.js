@@ -8,10 +8,10 @@ var fs = require("fs");
 var shelljs = require("shelljs");
 
 // Personal modules
-var globals = require("./globals.js");
-var webserver = require("./webserver.js");
-var websocket = require("./websocket.js");
-var devMode = require("./devMode.js");
+var globals = require("./backend/globals.js");
+var webserver = require("./backend/webserver.js");
+var websocket = require("./backend/websocket.js");
+var devMode = require("./backend/devMode.js");
 
 // Start the servers
 webserver.initServer();

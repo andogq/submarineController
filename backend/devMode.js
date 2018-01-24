@@ -2,7 +2,7 @@
 var fs = require("fs");
 
 module.exports = function() {
-    if (fs.existsSync("../.submarineDev")) {
+    if (fs.existsSync("./.submarineDev")) {
         return true;
     } else {
         return false;

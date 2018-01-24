@@ -5,7 +5,7 @@ var globals = require("./globals.js");
 
 // Function to open and save a file
 function openFile(fileName) {
-    globals.staticFiles[fileName] = fs.readFileSync("../frontend/" + fileName);
+    globals.staticFiles[fileName] = fs.readFileSync("./frontend/" + fileName);
     console.log("    [+] " + fileName + " opened");
 }
 
