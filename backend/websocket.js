@@ -69,12 +69,8 @@ function update(websocket) {
             // Pulled successfully
             if (code == 0) {
                 websocket.send(JSON.stringify(["updateComplete"]));
-                console.log("[+] Update complete. Rebooting in 2 seconds\n");
-
-                // Wait 2 seconds before rebooting
-                setTimeout(function() {
-                    shelljs.exec("sudo reboot now", {silent: true});
-                }, 2000);
+                console.log("[+] Update complete. Rebooting\n");
+                shelljs.exec("sudo reboot now", {silent: true});
             } else {
                 // Something went wrong
                 websocket.send(JSON.stringify(["updateFailed"]));
