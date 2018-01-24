@@ -141,22 +141,28 @@ function changeWifi(client) {
             } else {
                 console.log("    [+] Changing WiFi details");
                 // Open the wpa_supplicant file. Use the shell to get permissions
-                shelljs.exec("sudo cat /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout) {
-                    // Swap the ssid and psk
-                    stdout = stdout.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
-                    stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
+                shelljs.exec("sudo cat /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
+                    if (stderr) {
+                        client.send(JSON.stringify(["changeWifiFail", stderr]));
+                    } else {
+                        // Swap the ssid and psk
+                        stdout = stdout.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
+                        stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
 
-                    shelljs.exec("echo '" + stdout + "' > wpa.txt", {silent: true}, function(code, out, err) {
-                        if (err) {
-                            client.send(JSON.stringify(["changeWifiFail", stderr]));
-                        } else {
-                            client.send(JSON.stringify(["changeWifiSuccess"]));
-                        }
-                    });
+                        // Write to the wifi file
+                        shelljs.exec("echo '" + stdout + "' > /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
+                            if (err) {
+                                // Something went wrong
+                                client.send(JSON.stringify(["changeWifiFail", stderr]));
+                                return;
+                            }
+                        });
+                    }
                 });
             }
 
-            //if (!devMode()) shelljs.exec("sudo reboot now");
+            client.send(JSON.stringify(["changeWifiSuccess"]));
+            if (!devMode()) shelljs.exec("sudo reboot now");
         });
     });
 }
