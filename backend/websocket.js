@@ -150,7 +150,7 @@ function changeWifi(client) {
                         stdout = stdout.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
 
                         // Write to the wifi file
-                        shelljs.exec("echo '" + stdout + "' > /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
+                        shelljs.exec("echo '" + stdout + "' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
                             if (err) {
                                 // Something went wrong
                                 client.send(JSON.stringify(["changeWifiFail", stderr]));
