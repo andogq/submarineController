@@ -148,7 +148,7 @@ function changeWifi(client) {
                     if (err) {
                         // Error object is very weird
                         console.log("    [!] Error connecting to WiFi network")
-                        client.send(JSON.stringify(["changeWifiFail"]));
+                        client.send(JSON.stringify(["changeWifiFail", "Ensure credentials are correct and in range"]));
                     } else {
                         console.log("    [+] Successfully connected to " + ssid);
                         client.send(JSON.stringify(["changeWifiSuccess"]));
