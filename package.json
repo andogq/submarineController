@@ -19,6 +19,7 @@
   "dependencies": {
     "fs": "0.0.1-security",
     "http": "0.0.0",
+    "node-wifi": "^2.0.4",
     "shelljs": "^0.8.0",
     "ws": "^4.0.0"
   },

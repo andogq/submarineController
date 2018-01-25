@@ -27,7 +27,7 @@ function websocketMessage(event) {
             changeWifiSuccess();
             break;
         case "changeWifiFail":
-            changeWifiFail(data[1]);
+            changeWifiFail();
             break;
         default:
             console.log("Unknown command " + event.data);
@@ -72,8 +72,8 @@ function updateComplete(success) {
  }
 
 // Function called when the wifi change fails
-function changeWifiFail(reason) {
-    setMenu("Error: " + reason,
+function changeWifiFail() {
+    setMenu("Error connecting to network. Ensure credentials are correct and in range",
         {label: "Back", callback: changeWifiNetwork}
     );
 }

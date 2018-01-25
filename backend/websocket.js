@@ -2,6 +2,7 @@
 var fs = require("fs");
 var shelljs = require("shelljs");
 var ws = require("ws");
+var wifi = require("node-wifi");
 
 var devMode = require("./devMode.js");
 
@@ -138,31 +139,22 @@ function changeWifi(client) {
             if (devMode()) {
                 console.log("    [?] New SSID: " + ssid);
                 console.log("    [?] New PSK: " + psk);
+                client.send(JSON.stringify(["changeWifiSuccess"]));
             } else {
-                console.log("    [+] Changing WiFi details");
-                // Open the wpa_supplicant file. Use the shell to get permissions
-                shelljs.exec("sudo cat /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, wpa_file, stderr) {
-                    if (stderr || code != 0) {
-                        client.send(JSON.stringify(["changeWifiFail", stderr + " " + code]));
+                console.log("    [+] Connecting to new WiFi network");
+                // Initialise the wifi interface
+                wifi.init({iface: null});
+                wifi.connect({ssid: ssid, password: psk}, function(err) {
+                    if (err) {
+                        // Error object is very weird
+                        console.log("    [!] Error connecting to WiFi network")
+                        client.send(JSON.stringify(["changeWifiFail"]));
                     } else {
-                        // Swap the ssid and psk
-                        wpa_file = wpa_file.replace(/^(\s+ssid=")([\w\d-_\.]+)(")$/gm, "$1" + ssid + "$3");
-                        wpa_file = wpa_file.replace(/^(\s+psk=")([\w\d-_\.]+)(")$/gm, "$1" + psk + "$3");
-
-                        // Write to the wifi file
-                        shelljs.exec("echo '" + wpa_file + "' | sudo tee /etc/wpa_supplicant/wpa_supplicant.conf", {silent: true}, function(code, stdout, stderr) {
-                            if (err) {
-                                // Something went wrong
-                                client.send(JSON.stringify(["changeWifiFail", stderr]));
-                                return;
-                            }
-                        });
+                        console.log("    [+] Successfully connected to " + ssid);
+                        client.send(JSON.stringify(["changeWifiSuccess"]));
                     }
-                });
+                })
             }
-
-            client.send(JSON.stringify(["changeWifiSuccess"]));
-            if (!devMode()) shelljs.exec("sudo reboot now");
         });
     });
 }
