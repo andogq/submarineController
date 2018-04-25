@@ -7,8 +7,8 @@ var globals = {
 }
 
 // If dev mode then use localhost as ip
-if (require("./devMode.js")()) {
-    globals.submarineIp = "localhost";
-}
+// if (require("./devMode.js")()) {
+//     globals.submarineIp = "localhost";
+// }
 
 module.exports = globals;
