@@ -28,6 +28,11 @@ button {
     border: 3px solid black;
 }
 
+iframe {
+    border: none;
+    height: 100%;
+}
+
 #interface {
     /* Sizing */
     height: 100%;
