@@ -12,6 +12,7 @@ var globals = require("./backend/globals.js");
 var webserver = require("./backend/webserver.js");
 var websocket = require("./backend/websocket.js");
 var devMode = require("./backend/devMode.js");
+var control = require("./backend/control.js");
 
 // Start the servers
 webserver.initServer();

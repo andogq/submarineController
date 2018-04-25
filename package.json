@@ -21,6 +21,7 @@
     "http": "0.0.0",
     "node-wifi": "^2.0.4",
     "shelljs": "^0.8.0",
+    "socket.io": "^2.1.0",
     "ws": "^4.0.0"
   },
   "devDependencies": {}

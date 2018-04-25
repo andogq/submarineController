@@ -29,6 +29,9 @@ function websocketMessage(event) {
         case "changeWifiFail":
             changeWifiFail(data[1]);
             break;
+        case "connectionSuccess":
+            connected();
+            break;
         default:
             console.log("Unknown command " + event.data);
     }
@@ -85,4 +88,9 @@ function changeWifiSuccess() {
     setTimeout(function() {
         changeWifiNetwork();
     }, 2500);
+}
+
+// Starts the connection sequence
+function connect() {
+    server.send("connect");
 }

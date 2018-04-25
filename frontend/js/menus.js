@@ -1,17 +1,13 @@
 // The main menu
 function mainMenu() {
     setMenu("WaterPi Controller",
-        {label: "Connect", callback: connectSub},
+        {label: "Connect", callback: connect},
         {label: "Options", callback: options},
         {label: "Shutdown", callback: shutdownConfirm}
     );
 }
 
 // Top level menus
-function connectSub() {
-    console.log("Connecting");
-}
-
 function options() {
     setMenu("Options",
         {label: "Connection Details", callback: connectionDetails},

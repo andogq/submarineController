@@ -5,6 +5,8 @@ var ws = require("ws");
 var wifi = require("node-wifi");
 
 var devMode = require("./devMode.js");
+var control = require("./control.js");
+var globals = require("./globals.js");
 
 // Starts the server
 function initServer(webserver) {
@@ -21,7 +23,7 @@ function initServer(webserver) {
 // Run on every new connection
 function connection(newClient) {
     console.log("    [+] Websocket connection");
-
+    globals.client = newClient;
     // Event listener for when there's data sent
     newClient.on("message", function(message) {
         incomingMessage(message, newClient);
@@ -36,13 +38,16 @@ function incomingMessage(message, client) {
             shutdown();
             break;
         case "update":
-            update(client);
+            update();
             break;
         case "getWiFiNetwork":
-            wifiDetails(client);
+            wifiDetails();
             break;
         case "changeWifi":
-            changeWifi(client);
+            changeWifi();
+            break;
+        case "connect":
+            control.connect();
             break;
         default:
             console.log("            [!] Unknown command " + message);
@@ -66,18 +71,18 @@ function shutdown() {
 }
 
 // Command to update the controller
-function update(client) {
+function update() {
     console.log("[+] Updating software");
     if (!devMode()) {
         shelljs.exec("git pull", {silent: true}, function(code, stdout, stderr) {
             // Pulled successfully
             if (code == 0) {
-                client.send(JSON.stringify(["updateComplete"]));
+                globals.client.send(JSON.stringify(["updateComplete"]));
                 console.log("[+] Update complete. Rebooting\n");
                 shelljs.exec("sudo reboot now", {silent: true});
             } else {
                 // Something went wrong
-                client.send(JSON.stringify(["updateFailed"]));
+                globals.client.send(JSON.stringify(["updateFailed"]));
                 console.log("[!] Update failed");
 
                 // Print out the error line by line
@@ -91,19 +96,19 @@ function update(client) {
         });
     } else {
         console.log("    [+] Devmode, not updating or restarting");
-        client.send(JSON.stringify(["updateComplete"]));
+        globals.client.send(JSON.stringify(["updateComplete"]));
     }
 }
 
 // Command to fetch the wifi details
-function wifiDetails(client) {
+function wifiDetails() {
     console.log("[+] Getting WiFi network details");
     shelljs.exec("iwgetid -r", {silent: true}, function(code, stdout) {
-        client.send(JSON.stringify(["wifiNetwork", stdout]));
+        globals.client.send(JSON.stringify(["wifiNetwork", stdout]));
     });
 }
 
-function changeWifi(client) {
+function changeWifi() {
     console.log("[+] Scanning for USB");
 
     shelljs.exec("lsblk", {silent: true}, function(code, stdout) {
@@ -116,7 +121,7 @@ function changeWifi(client) {
         } catch (err) {
             // USB isn't detected
             console.log("    [!] USB not detected")
-            client.send(JSON.stringify(["changeWifiFail", "No USB detected"]));
+            globals.client.send(JSON.stringify(["changeWifiFail", "No USB detected"]));
             return;
         }
 
@@ -127,7 +132,7 @@ function changeWifi(client) {
             // The file couldn't be opened
             if (err) {
                 console.log("    [!] wifi.txt not found");
-                client.send(JSON.stringify(["changeWifiFail", "wifi.txt not found"]));
+                globals.client.send(JSON.stringify(["changeWifiFail", "wifi.txt not found"]));
                 return;
             }
 
