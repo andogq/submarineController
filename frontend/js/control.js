@@ -1,5 +1,5 @@
 // Globals
-const submarineIp = "192.168.1.185";
+const submarineIp = "192.168.43.127";
 const submarinePort = 8080;
 
 // Sets the menu to say connecting and waits
@@ -15,7 +15,13 @@ function connected() {
 
 function setupControl() {
     domInterface.innerHTML = "";
-    let iframe = document.createElement("iframe");
-    iframe.src = `http://${submarineIp}:${submarinePort}/`;
-    domInterface.appendChild(iframe);
+
+    let canvas = document.createElement("canvas");
+    document.body.appendChild(canvas);
+    // Create h264 player
+    let uri = `ws://${submarineIp}:${submarinePort}`;
+    let wsavc = new WSAvcPlayer(canvas, "webgl", 1, 35);
+    wsavc.connect(uri, () => {
+        wsavc.playStream();
+    });
 }

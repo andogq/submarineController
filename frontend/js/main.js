@@ -4,7 +4,7 @@ window.addEventListener("gamepadconnected", function(event) {
 });
 
 // Set up the websocket connection
-let server = new WebSocket("ws://0.0.0.0:" + websocketPort);
+let server = new WebSocket("ws://localhost:" + websocketPort);
 
 server.onopen = function(event) {
     websocketOpen(event);

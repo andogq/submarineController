@@ -11,7 +11,7 @@ var globals = require("./globals.js");
 // Starts the server
 function initServer(webserver) {
     // Make the websocket server
-    console.log("[+] Starting the websocket server\n");
+    console.log(" [+] Starting the websocket server\n");
     let server = new ws.Server({server: webserver});
 
     // Event listener for when somthing connects to the server

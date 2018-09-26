@@ -15,8 +15,8 @@ var devMode = require("./backend/devMode.js");
 var control = require("./backend/control.js");
 
 // Start the servers
-webserver.initServer();
-websocket.initServer(webserver.server);
+let server = webserver.initServer();
+websocket.initServer(server);
 
 // Check if running on developer machine
 if (devMode()) {
