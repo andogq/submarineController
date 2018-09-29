@@ -1,15 +1,19 @@
 // Module imports
-var io = require("socket.io-client");
-var globals = require("./globals.js");
+let globals = require("./globals.js");
+let net = require("net");
 
 let socket;
 
 function connect() {
-    socket = io.connect(`http://${globals.submarineIp}:${globals.submarinePort}/`);
-    socket.on("connect", () => {
-        console.log(" [+] Connected to submarine");
-        globals.client.send(JSON.stringify(["connectionSuccess"]));
+    socket = net.connect(globals.submarinePort, globals.submarineIp, () => {
+        console.log("Connected to submarine");
+        globals.client.send(JSON.stringify(["connected"]));
     });
 }
 
+function joystickUpdate(joystick) {
+    console.log(socket);
+}
+
 module.exports.connect = connect;
+module.exports.joystickUpdate = joystickUpdate;

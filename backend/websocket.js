@@ -33,7 +33,8 @@ function connection(newClient) {
 // Run on every incoming message
 function incomingMessage(message, client) {
     console.log("        [+] Message received from client\n");
-    switch (message) {
+    message = JSON.parse(message);
+    switch (message[0]) {
         case "shutdown":
             shutdown();
             break;
@@ -49,6 +50,8 @@ function incomingMessage(message, client) {
         case "connect":
             control.connect();
             break;
+        case "joystickUpdate":
+            control.joystickUpdate(message[1]);
         default:
             console.log("            [!] Unknown command " + message);
             break;

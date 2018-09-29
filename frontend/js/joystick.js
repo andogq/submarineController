@@ -19,7 +19,8 @@ let joystickEvent = {
     "axesMainUpDown": function() {return;},
     "axesMainTwist": function() {return;},
     "axesMiniLeftRight": function() {return;},
-    "axesMiniUpDown": function() {return;}
+    "axesMiniUpDown": function() {return;},
+    "all": []
 };
 
 // Holds the last time of all the buttons pressed so that there isn't multiple presses for holding down too long
@@ -171,6 +172,10 @@ function joystickLoop() {
         // console.log("Mini up down axes: " + joystick.axes[5]);
     } else {
         lastTimePressed["axesMiniUpDown"] = 0;
+    }
+    
+    for (func of joystickEvent.all) {
+        func(joystick);
     }
 
     requestAnimationFrame(joystickLoop);

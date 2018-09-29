@@ -29,7 +29,7 @@ function websocketMessage(event) {
         case "changeWifiFail":
             changeWifiFail(data[1]);
             break;
-        case "connectionSuccess":
+        case "connected":
             connected();
             break;
         default:
@@ -42,7 +42,7 @@ function websocketMessage(event) {
 */
 // Send message to server to suhutdown
 function shutdown() {
-    server.send("shutdown");
+    server.send(JSON.stringify(["shutdown"]));
     // Display a message
     setMenu("Shutting down controller");
     // Remove the joystick so the user can't do anything
@@ -51,7 +51,7 @@ function shutdown() {
 
 // Sends a message to update the controller
 function update() {
-    server.send("update");
+    server.send(JSON.stringify(["update"]));
     // Display a message
     setMenu("Updating software.....");
 }
@@ -71,7 +71,7 @@ function updateComplete(success) {
 }
  // Send to the server to scan for a USB
  function changeWifi() {
-     server.send("changeWifi");
+     server.send(JSON.stringify(["changeWifi"]));
  }
 
 // Function called when the wifi change fails
@@ -88,9 +88,4 @@ function changeWifiSuccess() {
     setTimeout(function() {
         changeWifiNetwork();
     }, 2500);
-}
-
-// Starts the connection sequence
-function connect() {
-    server.send("connect");
 }
